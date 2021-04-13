@@ -1,0 +1,12 @@
+{
+  "name": "CSS-simplify",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:YaHu-Lee/CSS-simplify.git",
+  "author": "YaHu-Lee <lyh990719@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "postcss": "^8.2.10",
+    "react": "^17.0.2"
+  }
+}
