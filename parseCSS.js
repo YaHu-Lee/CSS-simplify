@@ -1,7 +1,7 @@
 /**
  * 本文件的用途是，将需要简化的 CSS 文件中所有匹配规则 (Rules) 提取出来 (借助postcss)，根据其最后一个选择器的类型，分别存入 4 个 hash 表中
  * 这四个 hash 表的名字分别是：m_idRules，m_classRules，m_tagRules，m_shadowPseudoElementRules
- * 同时，需要使用 bloom filter 对这 4 个 hash 表进行访问过滤以模拟真实浏览器的样式计算策略。
+ * 同时，使用 bloom filter 对这 4 个 hash 表进行访问过滤以模拟真实浏览器的样式计算策略。
  * 
  * 对 CSS 的语法语义分析是通过 postcss 来实现的。
  * 使用 postcss 处理后，调用 walkRules 方法来遍历整个 css 文件中的 Rules。
@@ -40,6 +40,7 @@ const m_idRules = {},
       tagBloomFilter = new BloomFilter(),
       shadowPseudoElementBloomFilter = new BloomFilter()
 const tagReg = /div|p|span|img|br|a/g                                         // 写代码的时候瞎诹的
+
 cssTree.walkRules(rule => {
   const selectors = rule.selector.split(',') || []
   selectors.forEach(selector => {
@@ -72,4 +73,13 @@ cssTree.walkRules(rule => {
     // 当前缺少伪类选择器的处理逻辑！！！因为我还没想清楚伪类选择器与其他选择器的共存关系T_T.
   })
 })
-console.log(m_classRules, m_idRules, m_tagRules)
+module.exports = {
+  m_idRules,
+  idBloomFilter,
+  m_classRules,
+  classBloomFilter,
+  m_tagRules,
+  tagBloomFilter,
+  m_shadowPseudoElementRules,
+  shadowPseudoElementBloomFilter
+}
