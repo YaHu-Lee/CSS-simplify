@@ -25,11 +25,11 @@
  * 
  * 本文件对整理好的 css Rules 的处理思路：
  */
-const fs = require("fs")
-const path = require("path")
-const postcss = require("postcss")
-const BloomFilter = require("./bloomFilter")
-const css = fs.readFileSync(path.join(__dirname, 'test.css')).toString()
+import fs from "fs"
+import path from "path"
+import postcss from "postcss"
+import BloomFilter from "./bloomFilter.js"
+const css = fs.readFileSync('test.css').toString()
 const cssTree = postcss.parse(css)
 const m_idRules = {},
       m_classRules = {},
@@ -45,35 +45,37 @@ cssTree.walkRules(rule => {
   const selectors = rule.selector.split(',') || []
   selectors.forEach(selector => {
     const selectorPhrase = selector.trim().split(' ')
+    const searchPath = [...selectorPhrase].reverse()
     const currentSelector = selectorPhrase[selectorPhrase.length - 1].trim()  // 取到一串选择器的最后一项
     console.log(`当前处理的 selector：${currentSelector}`)
+    console.log(`他的查询路径：${searchPath}`)
     // 判断这一项属于哪一类
     if(currentSelector.indexOf('#') === 0) {                                  // id选择器
       console.log('此为id选择器')
       if(!m_idRules[currentSelector]) {
         m_idRules[currentSelector] = []
       }
-      m_idRules[currentSelector].push(Object.assign({}, rule, {selector: selector}))
+      m_idRules[currentSelector].push(Object.assign({}, rule, {selector, searchPath}))
       idBloomFilter.set(currentSelector)
     } else if(currentSelector.indexOf('.') === 0) {                           // 类选择器
       console.log('此为class选择器')
       if(!m_classRules[currentSelector]) {
         m_classRules[currentSelector] = []
       }
-      m_classRules[currentSelector].push(Object.assign({}, rule, {selector: selector}))
+      m_classRules[currentSelector].push(Object.assign({}, rule, {selector, searchPath}))
       classBloomFilter.set(currentSelector)
     } else if(tagReg.test(currentSelector)) {                                    // 标签选择器
       console.log('此为tag选择器')
       if(!m_tagRules[currentSelector]) {
         m_tagRules[currentSelector] = []
       }
-      m_tagRules[currentSelector].push(Object.assign({}, rule, {selector: selector}))
+      m_tagRules[currentSelector].push(Object.assign({}, rule, {selector, searchPath}))
       tagBloomFilter.set(currentSelector)
     }
     // 当前缺少伪类选择器的处理逻辑！！！因为我还没想清楚伪类选择器与其他选择器的共存关系T_T.
   })
 })
-module.exports = {
+export {
   m_idRules,
   idBloomFilter,
   m_classRules,

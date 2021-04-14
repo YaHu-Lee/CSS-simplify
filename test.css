@@ -1,9 +1,25 @@
-.a {
-  background-color: aliceblue;
-}
-p .a, div a, div #q{
-  background-attachment: fixed;
-}
-a :hover{
-  background-color: aliceblue;
-}
+/**
+ *                    a
+ *                   / \
+ *                  b   c
+ *                 / \   \
+ *                d   e   f
+ */
+ .a {
+   background-color: aliceblue;
+ }
+ .a .b {
+   background-color: antiquewhite;
+ }
+ .a .c {
+   background-color: aqua;
+ }
+ .a .b .d {
+   background-color: aquamarine;
+ }
+ .a .b .e {
+   background-color: beige;
+ }
+ .a .c .f {
+   background-color: black;
+ }

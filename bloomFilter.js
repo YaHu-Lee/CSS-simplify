@@ -30,4 +30,4 @@ BloomFilter.prototype.hashFunction_2 = function(selector) {
   selector.split('').map(char => hashNumber += char.charCodeAt())
   return hashNumber % this.hashArrayLength
 }
-module.exports = BloomFilter
+export default BloomFilter
