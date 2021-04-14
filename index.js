@@ -12,10 +12,12 @@ import {
   m_tagRules,
   tagBloomFilter,
   m_shadowPseudoElementRules,
-  shadowPseudoElementBloomFilter
+  shadowPseudoElementBloomFilter,
+  cssTree
 } from "./parseCSS.js"
-const DOM2CSS = new Map()    // 内部维护每个DOM与其对应的CSS规则对象
-// console.log(searchTree)
+const DOM2CSS_Class = new Map()    // 内部维护每个DOM与其对应的CSS规则对象
+const DOM2CSS_Tag = new Map()
+const DOM2CSS_Id = new Map()
 /**
  * run 函数是整个程序的入口函数，搭建了层序遍历架子，寻找每个 DOM 节点对应的 CSSRule
  * @param {object} root 
@@ -49,7 +51,7 @@ function searchCSSByClass(node) {
       })
     }
   })
-  DOM2CSS.set(node, resultRules)              // 将当前 DOM 节点与其所对应的 CSS Rules 关联起来
+  DOM2CSS_Class.set(node, resultRules)              // 将当前 DOM 节点与其所对应的 CSS Rules 关联起来
 }
 function isMatched(node, rule) {
   let currentNode = node
@@ -74,5 +76,27 @@ function isMatched(node, rule) {
     return true
   } else return false
 }
+function renderCSS(combine = false) {
+  // 此函数为CSS出口函数，其作用是将每个DOM所对应的CSS映射到文件内
+  // 为每个DOM创建专属id，其对应的类选择器被映射为专属id选择器
+  let css = ''
+  DOM2CSS_Class.forEach((rules, dom) => {
+    // cssText: `#L1234{}`
+    const Id = '#L' + Date.now()
+    let domRule = ''
+    rules.forEach(rule => {
+      let currentRule = ''
+      const declarations = rule.nodes
+      declarations.forEach(declaration => {
+        currentRule = currentRule + declaration.prop + ':' + declaration.value + ';'
+      })
+      if(!combine) domRule = domRule + Id + `{${currentRule}}`
+      else domRule = domRule + currentRule
+    })
+    if(!combine) css = css + domRule
+    else css = css + Id + `{${domRule}}`
+  })
+  return css
+}
 run(searchTree)
-console.log(DOM2CSS)
+console.log(renderCSS(true))
