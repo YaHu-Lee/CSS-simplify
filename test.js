@@ -1,4 +1,3 @@
-// const React = require("react")
 import React from "react"
 const Element = React.createElement
 
