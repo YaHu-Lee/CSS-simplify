@@ -79,10 +79,15 @@ function isMatched(node, rule) {
 function renderCSS(combine = false) {
   // 此函数为CSS出口函数，其作用是将每个DOM所对应的CSS映射到文件内
   // 为每个DOM创建专属id，其对应的类选择器被映射为专属id选择器
+
+  // 参数 combine 作用：合并匹配到同一 DOM 的多个选择器
   let css = ''
+  let currentId = 0
   DOM2CSS_Class.forEach((rules, dom) => {
     // cssText: `#L1234{}`
-    const Id = '#L' + Date.now()
+    const Id = '#L' + "RABBITCSSPACK" + currentId
+    currentId++
+    dom.id = Id
     let domRule = ''
     rules.forEach(rule => {
       let currentRule = ''
@@ -98,5 +103,41 @@ function renderCSS(combine = false) {
   })
   return css
 }
+function renderDOM(root) {
+  // 此函数将内存中的DOM元素渲染成文件形式
+  // 渲染过程是递归过程
+  function renderSingleDOM(dom, fnString = 'creatElement') {
+    if(!dom.children || !dom.children.length) {
+      return `${fnString}(${dom.type}, ${JSON.stringify(Object.assign({},  {id: dom.id}))})`   // 此处缺少dom的原props！
+    } else {
+      const childrenText = dom.children.map((child) => renderSingleDOM(child))
+      let text = `${fnString}(${dom.type}, ${JSON.stringify(Object.assign({},  {id: dom.id}))}`
+      childrenText.forEach(child => {
+        text += `, ${child}`
+      })
+      text += ')'
+      return text
+    }
+  }
+  return renderSingleDOM(root)
+}
 run(searchTree)
 console.log(renderCSS(true))
+console.log(renderDOM(searchTree))
+// #LRABBITCSSPACK0{background-color:aliceblue;}
+// #LRABBITCSSPACK1{background-color:aqua;color:aliceblue;}
+// #LRABBITCSSPACK2{background-color:black;}
+// #LRABBITCSSPACK3{background-color:antiquewhite;}
+// #LRABBITCSSPACK4{background-color:beige;color:aliceblue;}
+// #LRABBITCSSPACK5{background-color:aquamarine;}
+
+// createElement(div, {"id":"#LRABBITCSSPACK0"}, 
+//   createElement(div, {"id":"#LRABBITCSSPACK3"}, 
+//     createElement(div, {"id":"#LRABBITCSSPACK5"}), 
+//     createElement(div, {"id":"#LRABBITCSSPACK4"})
+//   ), 
+//   createElement(div, {"id":"#LRABBITCSSPACK1"}, 
+//     createElement(div, {"id":"#LRABBITCSSPACK2"})
+//   )
+// )
+

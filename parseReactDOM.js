@@ -56,5 +56,4 @@ function setupInheritanceRelationship(root) { // 采用层序遍历来建立继�
 }
 const root = JSON.parse(JSON.stringify(reactDomTree)) // 这一步或许狠耗性能，想想办法
 const searchTree = setupInheritanceRelationship(root)
-console.log(searchTree)
 export default searchTree
