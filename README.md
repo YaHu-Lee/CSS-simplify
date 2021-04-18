@@ -99,21 +99,21 @@ export default function Test() {
 ```
 经过处理后，输出如下：
 ```
-// #LRABBITCSSPACK0{background-color:aliceblue;}
-// #LRABBITCSSPACK1{background-color:aqua;color:aliceblue;}
-// #LRABBITCSSPACK2{background-color:black;}
-// #LRABBITCSSPACK3{background-color:antiquewhite;}
-// #LRABBITCSSPACK4{background-color:beige;color:aliceblue;}
-// #LRABBITCSSPACK5{background-color:aquamarine;}
+#LRABBITCSSPACK0{background-color:aliceblue;}
+#LRABBITCSSPACK1{background-color:aqua;color:aliceblue;}
+#LRABBITCSSPACK2{background-color:black;}
+#LRABBITCSSPACK3{background-color:antiquewhite;}
+#LRABBITCSSPACK4{background-color:beige;color:aliceblue;}
+#LRABBITCSSPACK5{background-color:aquamarine;}
 
-// createElement(div, {"id":"#LRABBITCSSPACK0"}, 
-//   createElement(div, {"id":"#LRABBITCSSPACK3"}, 
-//     createElement(div, {"id":"#LRABBITCSSPACK5"}), 
-//     createElement(div, {"id":"#LRABBITCSSPACK4"})
-//   ), 
-//   createElement(div, {"id":"#LRABBITCSSPACK1"}, 
-//     createElement(div, {"id":"#LRABBITCSSPACK2"})
-//   )
-// )
+createElement(div, {"id":"#LRABBITCSSPACK0"}, 
+  createElement(div, {"id":"#LRABBITCSSPACK3"}, 
+    createElement(div, {"id":"#LRABBITCSSPACK5"}), 
+    createElement(div, {"id":"#LRABBITCSSPACK4"})
+  ), 
+  createElement(div, {"id":"#LRABBITCSSPACK1"}, 
+    createElement(div, {"id":"#LRABBITCSSPACK2"})
+  )
+)
 ```
 层叠的类选择器不见了，取而代之的是能够让浏览器快速查找到的Id选择器，芜湖！
